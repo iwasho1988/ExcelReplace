@@ -6,12 +6,17 @@ import json
 import os
 import sys
 
-REPLACE_TXT = os.path.dirname(os.path.abspath(__file__)) + "/replace.txt"
 
+def read_text():
+    SEPATATER = "/"  # for Linux
+    ENCODING = "utf-8" # for Linux
+    if os.name == "nt":
+        SEPATATER = "\\"  # for Windows
+        ENCODING = "Shift-JIS"  # for Windows
 
-def read_text(args):
+    REPLACE_TXT = os.path.dirname(os.path.abspath(__file__)) + SEPATATER + "replace.txt"
     replace_list_dict = {}
-    with open(REPLACE_TXT,mode="r",encoding='utf-8') as f:
+    with open(REPLACE_TXT,mode="r",encoding=ENCODING) as f:
         for rows in f.read().split():
             row = rows.split(":")
             replace_list_dict[row[0]] = row[1]
@@ -37,7 +42,7 @@ def main():
         EXCEL_SHEET = args[2]
         print(EXCEL_FILE,EXCEL_SHEET)
 
-        replace_list_dict = read_text(args)
+        replace_list_dict = read_text()
         wb = opx.load_workbook(EXCEL_FILE)
         ws = wb[EXCEL_SHEET]
         replace_target_dict = load_data(ws,replace_list_dict)
